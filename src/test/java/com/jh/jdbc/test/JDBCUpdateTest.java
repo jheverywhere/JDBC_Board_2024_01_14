@@ -39,7 +39,7 @@ public class JDBCUpdateTest {
 
       pstat = conn.prepareStatement(sql);
       pstat.executeUpdate();
-      
+
 
     } catch (ClassNotFoundException e) {
       System.out.println("드라이버 로딩 실패");
