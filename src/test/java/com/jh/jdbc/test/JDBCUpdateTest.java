@@ -30,25 +30,16 @@ public class JDBCUpdateTest {
       // 데이터베이스에 연결
       conn = DriverManager.getConnection(url, username, password);
 
-     String sql = "SELECT *";
-     sql += " FROM article";
-     sql += " ORDER BY id DESC;";
+     String sql = "UPDATE article";
+     sql += " SET updateDate = NOW()";
+     sql += ",title = '수정제목'";
+     sql += ",`body` = '수정내용'";
+     sql += " WHERE id = 1;";
+
 
       pstat = conn.prepareStatement(sql);
-      rs = pstat.executeQuery(sql);
-
-      while(rs.next()){
-        int id = rs.getInt("id");
-        String regDate = rs.getString("regDate");
-        String updateDate = rs.getString("updateDate");
-        String title = rs.getString("title");
-        String body = rs.getString("body");
-
-        Article article = new Article(id,regDate,updateDate,title,body);
-        articles.add(article);
-      }
-
-      System.out.println("결과 : "+ articles);
+      pstat.executeUpdate();
+      
 
     } catch (ClassNotFoundException e) {
       System.out.println("드라이버 로딩 실패");
