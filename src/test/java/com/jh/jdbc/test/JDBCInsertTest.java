@@ -25,7 +25,7 @@ public class JDBCInsertTest {
 
       // 데이터베이스에 연결
       conn = DriverManager.getConnection(url, username, password);
-      
+
       String sql = "insert into article";
       sql+= " SET regDate = NOW()";
       sql+= ", updateDate = now()";

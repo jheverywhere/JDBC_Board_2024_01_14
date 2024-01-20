@@ -1,5 +1,9 @@
 package com.jh.jdbc.board;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 public class App {
@@ -22,15 +26,66 @@ public class App {
       System.out.printf("명령) ");
       String cmd = in.nextLine();
       if(cmd.equals("/usr/article/write")){
+        System.out.println("===게시물 등록===");
         System.out.printf("제목 : ");
         String title = in.nextLine();
         System.out.printf("내용 : ");
         String body = in.nextLine();
 
         int id = ++articleLastId;
+        // JDBC 드라이버 클래스 이름
+        String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+
+        // 데이터베이스 연결 정보
+        String url = "jdbc:mysql://localhost:3306/text_board?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+        String username = "jheverywhere";
+        String password = "jh960525";
+
+        Connection conn = null;
+        PreparedStatement pstat = null;
+
+        try {
+          // JDBC 드라이버 로드
+          Class.forName(jdbcDriver);
+
+          // 데이터베이스에 연결
+          conn = DriverManager.getConnection(url, username, password);
+
+          String sql = "insert into article";
+          sql+= " SET regDate = NOW()";
+          sql+= ", updateDate = now()";
+          sql+= ", title = \""+title+"\"";
+          sql+= ",`body` = \""+body+"\"";
+
+          pstat = conn.prepareStatement(sql);
+          int affectedRows = pstat.executeUpdate();
+
+          System.out.println("affectedRows: " + affectedRows);
+
+        } catch (ClassNotFoundException e) {
+          System.out.println("드라이버 로딩 실패");
+        } catch (SQLException e) {
+          System.out.println("에러 : " + e);
+        } finally {
+          try {
+            if (conn != null && !conn.isClosed()) {
+              // 연결 닫기
+              conn.close();
+            }
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+          try {
+            if (pstat != null && !pstat.isClosed()) {
+              pstat.close();
+            }
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+        }
+
         articles.add(new Article(id,title,body));
 
-        System.out.println("입력된 게시물 : " + articles.get(id-1));
         System.out.printf("%d번 게시물이 등록되었습니다.\n",id);
       }else if(cmd.equals("exit")){
         System.out.println("프로그램을 종료합니다.");
