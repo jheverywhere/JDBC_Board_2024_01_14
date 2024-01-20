@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class JDBCTest {
+public class JDBCConnectionTest {
   public static void main(String[] args) {
     // JDBC 드라이버 클래스 이름
     String jdbcDriver = "com.mysql.cj.jdbc.Driver";
