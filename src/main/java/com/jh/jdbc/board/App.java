@@ -1,18 +1,21 @@
 package com.jh.jdbc.board;
 
+import com.jh.jdbc.board.util.MysqlUtil;
+import com.jh.jdbc.board.util.SecSql;
+
 import java.sql.*;
 import java.util.*;
 
 public class App {
-  int articleLastId;
   List<Article> articles;
 
   public App() {
 
-    articleLastId = 0;
     articles = new ArrayList<>();
   }
-
+private static boolean isDevMode(){
+    return true;
+}
 
   public void run(){
 
@@ -26,47 +29,16 @@ public class App {
       String cmd = in.nextLine();
       Rq rq = new Rq(cmd);
 
-      // DB 연결 시작
-      String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+      //DB 세팅
+      MysqlUtil.setDBInfo("localhost","jheverywhere","jh960525","text_board");
+      MysqlUtil.setDevMode(isDevMode());
 
-      // 데이터베이스 연결 정보
-      String url = "jdbc:mysql://localhost:3306/text_board?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
-      String username = "jheverywhere";
-      String password = "jh960525";
-
-      Connection conn = null;
-
-      try {
-        // JDBC 드라이버 로드
-        Class.forName(jdbcDriver);
-
-        // 데이터베이스에 연결
-        conn = DriverManager.getConnection(url, username, password);
-
-        doAction(conn,in,rq);
-
-      } catch (ClassNotFoundException e) {
-        System.out.println("드라이버 로딩 실패");
-      } catch (SQLException e) {
-        System.out.println("에러 : " + e);
-      } finally {
-        try {
-          if (conn != null && !conn.isClosed()) {
-            // 연결 닫기
-            conn.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-
-
-      // DB 연결 끝
-      in.close();
+      //명령 로직 실행
+        doAction(in,rq);
     }
   }
 
-  private void doAction(Connection conn, Scanner in, Rq rq) {
+  private void doAction(Scanner in, Rq rq) {
     if (rq.getUrlPath().equals("/usr/article/write")) {
       System.out.println("== 게시물 작성 ==");
       System.out.printf("제목 : ");
@@ -75,30 +47,16 @@ public class App {
       System.out.printf("내용 : ");
       String body = in.nextLine();
 
-      int id = ++articleLastId;
 
-      String sql = "INSERT INTO article";
-      sql += " SET regDate = NOW()";
-      sql += ", updateDate = NOW()";
-      sql += ", title = \"" + title + "\""; // title = "제목"
-      sql += ", `body` = \"" + body + "\"";
 
-      PreparedStatement pstat = null;
+      SecSql sql = new SecSql();
+      sql.append("INSERT INTO article");
+      sql.append("SET regDate = NOW()");
+      sql.append(", updateDate = NOW()");
+      sql.append(", title = ?", title);
+      sql.append(", `body` = ?", body);
 
-      try {
-        pstat = conn.prepareStatement(sql);
-        pstat.executeUpdate();
-      } catch (SQLException e) {
-        System.out.println("에러 : " + e);
-      } finally {
-        try {
-          if (pstat != null && !pstat.isClosed()) {
-            pstat.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
+      int id = MysqlUtil.insert(sql);
 
       Article article = new Article(id, title, body);
       articles.add(article);
@@ -110,41 +68,16 @@ public class App {
 
       System.out.println("== 게시물 리스트 ==");
 
-      String sql = "SELECT *";
-      sql += " FROM article";
-      sql += " ORDER BY id DESC;";
 
-      try {
-        pstat = conn.prepareStatement(sql);
-        rs = pstat.executeQuery(sql);
+      SecSql sql = new SecSql();
+      sql.append("SELECT *");
+      sql.append("FROM article");
+      sql.append("ORDER BY id DESC;");
 
-        while (rs.next()) {
-          int id = rs.getInt("id");
-          String regDate = rs.getString("regDate");
-          String updateDate = rs.getString("updateDate");
-          String title = rs.getString("title");
-          String body = rs.getString("body");
+      List<Map<String,Object>>articleListMap= MysqlUtil.selectRows(sql);
 
-          Article article = new Article(id, regDate, updateDate, title, body);
-          articles.add(article);
-        }
-      } catch (SQLException e) {
-        System.out.println("에러 : " + e);
-      } finally {
-        try {
-          if (rs != null && !rs.isClosed()) {
-            rs.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-        try {
-          if (pstat != null && !pstat.isClosed()) {
-            pstat.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
+      for(Map<String,Object> articleMap : articleListMap){
+        articles.add(new Article(articleMap));
       }
 
       if (articles.isEmpty()) {
@@ -169,28 +102,14 @@ public class App {
       System.out.printf("새 내용 : ");
       String body = in.nextLine();
 
-      PreparedStatement pstat = null;
+      SecSql sql = new SecSql();
+      sql.append("UPDATE article");
+      sql.append("SET updateDate = NOW()");
+      sql.append(", title = ?", title);
+      sql.append(", `body` = ?", body);
+      sql.append("WHERE id = ?" , id);
 
-      String sql = "UPDATE article";
-      sql += " SET updateDate = NOW()";
-      sql += ", title = \"" + title + "\"";
-      sql += ", `body` = \"" + body + "\"";
-      sql += " WHERE id = " + id;
-
-      try {
-        pstat = conn.prepareStatement(sql);
-        pstat.executeUpdate();
-      } catch (SQLException e) {
-        System.out.println("에러 : " + e);
-      } finally {
-        try {
-          if (pstat != null && !pstat.isClosed()) {
-            pstat.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
+      MysqlUtil.update(sql);
 
       System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
     } else if (rq.getUrlPath().equals("exit")) {
