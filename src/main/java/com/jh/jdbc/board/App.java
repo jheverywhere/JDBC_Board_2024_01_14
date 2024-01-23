@@ -13,30 +13,36 @@ public class App {
 
     articles = new ArrayList<>();
   }
-private static boolean isDevMode(){
-    return true;
-}
 
-  public void run(){
+  private static boolean isDevMode() {
+    return true;
+  }
+
+  public void run() {
 
     System.out.println("=== JDBC게시판 시작 ===");
 
     Scanner in = new Scanner(System.in);
 
+    try {
 
-    while(true){
-      System.out.printf("명령) ");
-      String cmd = in.nextLine();
-      Rq rq = new Rq(cmd);
+      while (true) {
+        System.out.printf("명령) ");
+        String cmd = in.nextLine();
+        Rq rq = new Rq(cmd);
 
-      //DB 세팅
-      MysqlUtil.setDBInfo("localhost","jheverywhere","jh960525","text_board");
-      MysqlUtil.setDevMode(isDevMode());
+        //DB 세팅
+        MysqlUtil.setDBInfo("localhost", "jheverywhere", "jh960525", "text_board");
+        MysqlUtil.setDevMode(isDevMode());
 
-      //명령 로직 실행
-        doAction(in,rq);
+        //명령 로직 실행
+        doAction(in, rq);
+      }
+    } finally {
+      in.close();
     }
   }
+
 
   private void doAction(Scanner in, Rq rq) {
     if (rq.getUrlPath().equals("/usr/article/write")) {
@@ -46,7 +52,6 @@ private static boolean isDevMode(){
 
       System.out.printf("내용 : ");
       String body = in.nextLine();
-
 
 
       SecSql sql = new SecSql();
@@ -74,9 +79,9 @@ private static boolean isDevMode(){
       sql.append("FROM article");
       sql.append("ORDER BY id DESC;");
 
-      List<Map<String,Object>>articleListMap= MysqlUtil.selectRows(sql);
+      List<Map<String, Object>> articleListMap = MysqlUtil.selectRows(sql);
 
-      for(Map<String,Object> articleMap : articleListMap){
+      for (Map<String, Object> articleMap : articleListMap) {
         articles.add(new Article(articleMap));
       }
 
@@ -107,11 +112,38 @@ private static boolean isDevMode(){
       sql.append("SET updateDate = NOW()");
       sql.append(", title = ?", title);
       sql.append(", `body` = ?", body);
-      sql.append("WHERE id = ?" , id);
+      sql.append("WHERE id = ?", id);
 
       MysqlUtil.update(sql);
 
       System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
+    }else if (rq.getUrlPath().equals("/usr/article/delete")) {
+      int id = rq.getIntParam("id", 0);
+
+      if (id == 0) {
+        System.out.println("id를 올바르게 입력해주세요.");
+        return;
+      }
+      SecSql sql = new SecSql();
+      sql.append("SELECT COUNT(*) AS CNT");
+      sql.append("FROM article");
+      sql.append("WHERE id = ?", id);
+
+      int articlesCount = MysqlUtil.selectRowIntValue(sql);
+
+      if(articlesCount == 0){
+        System.out.printf("%d번 게시물은 존재하지 않습니다.\n",id);
+        return;
+      }
+
+      sql = new SecSql();
+      sql.append("DELETE FROM article");
+      sql.append("WHERE id = ?",id);
+
+
+      MysqlUtil.delete(sql);
+
+      System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
     } else if (rq.getUrlPath().equals("exit")) {
       System.out.println("== 프로그램을 종료합니다 ==");
       System.exit(0);
