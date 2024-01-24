@@ -1,4 +1,4 @@
-package com.jh.jdbc.board;
+package com.jh.jdbc.board.dto;
 
 import java.util.Map;
 

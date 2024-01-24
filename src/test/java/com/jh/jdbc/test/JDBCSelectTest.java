@@ -1,7 +1,7 @@
 package com.jh.jdbc.test;
 
 
-import com.jh.jdbc.board.Article;
+import com.jh.jdbc.board.dto.Article;
 
 import java.sql.*;
 import java.util.ArrayList;
