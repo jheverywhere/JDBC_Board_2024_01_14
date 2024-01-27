@@ -41,7 +41,7 @@ public class App {
         MysqlUtil.setDevMode(isDevMode());
 
         //명령 로직 실행
-        action(in, rq);
+        action(rq);
       }
     } finally {
       in.close();
@@ -49,7 +49,7 @@ public class App {
   }
 
 
-  private void action(Scanner in, Rq rq) {
+  private void action(Rq rq) {
     MemberController memberController = Container.memberController;
     ArticleController articleController = Container.articleController;
 
