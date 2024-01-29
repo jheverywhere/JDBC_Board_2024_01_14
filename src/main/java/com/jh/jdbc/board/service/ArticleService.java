@@ -1,5 +1,6 @@
 package com.jh.jdbc.board.service;
 
+import com.jh.jdbc.board.dto.Article;
 import com.jh.jdbc.board.repository.ArticleRepository;
 
 import java.util.List;
@@ -13,12 +14,12 @@ public class ArticleService {
   public int write(String title, String body) {
     return articleRepository.wrtie(title,body);
   }
-  public List<Map<String, Object>> getArticlesMap(){
-    return articleRepository.getArticlesMap();
+  public List<Article> getForPrintArticles(){
+    return articleRepository.getForPrintArticles();
   }
 
-  public Map<String, Object> getArticleMap(int id) {
-    return articleRepository.getArticleMap(id);
+  public Article getForPrintArticleById(int id) {
+    return articleRepository.getForPrintArticleById(id);
   }
 
   public int getArticleCount(int id) {
@@ -32,4 +33,6 @@ public class ArticleService {
   public void delete(int id) {
     articleRepository.delete(id);
   }
+
+
 }

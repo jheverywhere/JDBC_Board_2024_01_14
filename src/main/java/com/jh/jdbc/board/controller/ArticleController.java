@@ -38,13 +38,8 @@ public class ArticleController {
   public void list() {
     System.out.println("== 게시물 리스트 ==");
 
-    List<Article> articles = new ArrayList<>();
+    List<Article> articles = articleService.getForPrintArticles();
 
-    List<Map<String, Object>> articleListMap = articleService.getArticlesMap();
-
-    for (Map<String, Object> articleMap : articleListMap) {
-      articles.add(new Article(articleMap));
-    }
 
     if (articles.isEmpty()) {
       System.out.println("게시물이 존재하지 않습니다.");
@@ -66,14 +61,14 @@ public class ArticleController {
     }
 
 
-    Map<String, Object> articleMap = articleService.getArticleMap(id);
+    Article article = articleService.getForPrintArticleById(id);
 
-    if (articleMap.isEmpty()) {
+    if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
 
-    Article article = new Article(articleMap);
+
 
     System.out.println("==== 게시물 상세보기 ====");
     System.out.printf("번호 : %d\n", article.id);

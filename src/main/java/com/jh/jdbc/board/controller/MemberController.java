@@ -1,6 +1,7 @@
 package com.jh.jdbc.board.controller;
 
 import com.jh.jdbc.board.container.Container;
+import com.jh.jdbc.board.dto.Member;
 import com.jh.jdbc.board.service.MemberService;
 import com.jh.jdbc.board.util.MysqlUtil;
 import com.jh.jdbc.board.util.SecSql;
@@ -89,4 +90,6 @@ public class MemberController {
     System.out.printf("\"%s\"님 환영합니다!\n",name);
 
   }
+
+
 }

@@ -1,5 +1,6 @@
 package com.jh.jdbc.board.repository;
 
+import com.jh.jdbc.board.dto.Member;
 import com.jh.jdbc.board.util.MysqlUtil;
 import com.jh.jdbc.board.util.SecSql;
 
@@ -24,4 +25,6 @@ public class MemberRepository {
 
     MysqlUtil.insert(sql);
   }
+
+
 }

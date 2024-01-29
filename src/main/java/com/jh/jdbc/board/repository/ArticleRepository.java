@@ -1,8 +1,10 @@
 package com.jh.jdbc.board.repository;
 
+import com.jh.jdbc.board.dto.Article;
 import com.jh.jdbc.board.util.MysqlUtil;
 import com.jh.jdbc.board.util.SecSql;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,22 +22,36 @@ public class ArticleRepository {
     return id;
   }
 
-  public List<Map<String, Object>> getArticlesMap() {
+  public  List<Article> getForPrintArticles() {
     SecSql sql = new SecSql();
     sql.append("SELECT *");
     sql.append("FROM article");
     sql.append("ORDER BY id DESC;");
+    List<Map<String,Object>> selectRows = MysqlUtil.selectRows(sql);
+    List<Article> articles = new ArrayList<>();
 
-    return MysqlUtil.selectRows(sql);
+    for (Map<String, Object> selectRow : selectRows) {
+      articles.add(new Article(selectRow));
+    }
+
+
+
+
+    return articles;
   }
 
-  public Map<String, Object> getArticleMap(int id) {
+  public Article getForPrintArticleById(int id) {
     SecSql sql = new SecSql();
     sql.append("SELECT *");
     sql.append("FROM article");
     sql.append("WHERE id = ?", id);
 
-    return MysqlUtil.selectRow(sql);
+    Map<String, Object> articleMap = MysqlUtil.selectRow(sql);
+    if (articleMap.isEmpty()) {
+      return null;
+    }
+
+    return new Article(articleMap);
   }
 
   public int getArticleCount(int id) {
@@ -65,4 +81,6 @@ public class ArticleRepository {
 
     MysqlUtil.delete(sql);
   }
+
+
 }

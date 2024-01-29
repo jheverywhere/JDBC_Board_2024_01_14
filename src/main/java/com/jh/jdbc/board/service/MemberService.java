@@ -1,6 +1,7 @@
 package com.jh.jdbc.board.service;
 
 import com.jh.jdbc.board.container.Container;
+import com.jh.jdbc.board.dto.Member;
 import com.jh.jdbc.board.repository.MemberRepository;
 
 public class MemberService {
@@ -15,5 +16,7 @@ public class MemberService {
   public void join(String loginId, String loginPw, String name) {
     memberRepository.join(loginId,loginPw,name);
   }
+
+
 }
 
