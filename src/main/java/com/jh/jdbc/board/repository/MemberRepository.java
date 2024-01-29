@@ -1,8 +1,11 @@
 package com.jh.jdbc.board.repository;
 
+import com.jh.jdbc.board.dto.Article;
 import com.jh.jdbc.board.dto.Member;
 import com.jh.jdbc.board.util.MysqlUtil;
 import com.jh.jdbc.board.util.SecSql;
+
+import java.util.Map;
 
 public class MemberRepository {
   public boolean isLoginIdDup(String loginId) {
@@ -27,4 +30,17 @@ public class MemberRepository {
   }
 
 
+  public Member getMemberByLoginId(String loginId) {
+    SecSql sql = new SecSql();
+    sql.append("SELECT *");
+    sql.append("FROM member");
+    sql.append("WHERE loginId = ?", loginId);
+
+    Map<String, Object> selectRow = MysqlUtil.selectRow(sql);
+    if (selectRow.isEmpty()) {
+      return null;
+    }
+
+    return new Member(selectRow);
+  }
 }

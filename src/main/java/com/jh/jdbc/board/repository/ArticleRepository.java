@@ -46,12 +46,12 @@ public class ArticleRepository {
     sql.append("FROM article");
     sql.append("WHERE id = ?", id);
 
-    Map<String, Object> articleMap = MysqlUtil.selectRow(sql);
-    if (articleMap.isEmpty()) {
+    Map<String, Object> selectRow = MysqlUtil.selectRow(sql);
+    if (selectRow.isEmpty()) {
       return null;
     }
 
-    return new Article(articleMap);
+    return new Article(selectRow);
   }
 
   public int getArticleCount(int id) {
