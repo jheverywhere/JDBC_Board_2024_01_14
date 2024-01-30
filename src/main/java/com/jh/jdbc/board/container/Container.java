@@ -6,11 +6,13 @@ import com.jh.jdbc.board.repository.ArticleRepository;
 import com.jh.jdbc.board.repository.MemberRepository;
 import com.jh.jdbc.board.service.ArticleService;
 import com.jh.jdbc.board.service.MemberService;
+import com.jh.jdbc.board.session.Session;
 
 import java.util.Scanner;
 
 public class Container {
   public static Scanner in;
+  public static Session session;
   public static MemberRepository memberRepository;
   public static ArticleRepository articleRepository;
 
@@ -22,7 +24,7 @@ public class Container {
 
   static{
     in = new Scanner(System.in);
-
+    session = new Session();
     memberRepository = new MemberRepository();
     articleRepository = new ArticleRepository();
     articleService = new ArticleService();
