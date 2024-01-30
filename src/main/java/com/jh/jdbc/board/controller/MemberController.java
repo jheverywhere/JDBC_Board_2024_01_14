@@ -122,12 +122,12 @@ public class MemberController {
       }
       System.out.printf("로그인 비밀번호 : ");
       loginPw = Container.in.nextLine().trim();
-      if (loginPw.length() == 0 || member.loginPw.equals(loginPw) == false) {
+      if (loginPw.length() == 0 || member.getLoginPw().equals(loginPw) == false) {
         System.out.println("비밀번호가 일치하지 않습니다.");
         tryCount++;
         continue;
       }
-      System.out.printf("\"%s\"님 환영합니다.\n",member.name);
+      System.out.printf("\"%s\"님 환영합니다.\n", member.getName());
       break;
     }
   }

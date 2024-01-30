@@ -1,22 +1,21 @@
 package com.jh.jdbc.board.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.Map;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Article {
- public int id;
- public String regDate;
- public String updateDate;
- public String title;
- public String body;
-
- //테스트를 위한 생성자
- public Article(int id, String regDate, String updateDate, String title, String body) {
-  this.id = id;
-  this.regDate = regDate;
-  this.updateDate = updateDate;
-  this.title = title;
-  this.body = body;
- }
+ private int id;
+ private String regDate;
+ private String updateDate;
+ private String title;
+ private String body;
 
 
 

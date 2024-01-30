@@ -1,14 +1,16 @@
 package com.jh.jdbc.board.dto;
 
-import java.util.Map;
+import lombok.Data;
 
+import java.util.Map;
+@Data
 public class Member {
- public int id;
- public String regDate;
- public String updateDate;
- public String loginId;
- public String loginPw;
- public String name;
+ private int id;
+ private String regDate;
+ private String updateDate;
+ private String loginId;
+ private String loginPw;
+ private String name;
 
 
  public Member(Map<String, Object> selectRow) {
@@ -18,18 +20,6 @@ public class Member {
   this.loginId = (String) selectRow.get("loginId");
   this.loginPw = (String) selectRow.get("loginPw");
   this.name = (String) selectRow.get("name");
- }
-
- @Override
- public String toString() {
-  return "Member{" +
-      "id=" + id +
-      ", regDate='" + regDate + '\'' +
-      ", updateDate='" + updateDate + '\'' +
-      ", loginId='" + loginId + '\'' +
-      ", loginPw='" + loginPw + '\'' +
-      ", name='" + name + '\'' +
-      '}';
  }
 }
 
