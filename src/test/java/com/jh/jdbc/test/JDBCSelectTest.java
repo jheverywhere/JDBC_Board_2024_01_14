@@ -45,9 +45,9 @@ public class JDBCSelectTest {
         String title = rs.getString("title");
         String body = rs.getString("body");
         String extra__writeName = rs.getString("extra__writeName");
+        int hit = rs.getInt("hit");
 
-
-        Article article = new Article(id,regDate,updateDate,memberId,title,body,extra__writeName);
+        Article article = new Article(id,regDate,updateDate,memberId,title,body,hit,extra__writeName);
         articles.add(article);
       }
 

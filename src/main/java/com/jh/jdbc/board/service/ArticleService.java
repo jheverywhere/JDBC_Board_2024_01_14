@@ -34,4 +34,7 @@ public class ArticleService {
   }
 
 
+  public void increaseHit(int id) {
+    articleRepository.increaseHit(id);
+  }
 }
