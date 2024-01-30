@@ -39,12 +39,15 @@ public class JDBCSelectTest {
 
       while(rs.next()){
         int id = rs.getInt("id");
+        int memberId = rs.getInt("memberId");
         String regDate = rs.getString("regDate");
         String updateDate = rs.getString("updateDate");
         String title = rs.getString("title");
         String body = rs.getString("body");
+        String extra__writeName = rs.getString("extra__writeName");
 
-        Article article = new Article(id,regDate,updateDate,title,body);
+
+        Article article = new Article(id,regDate,updateDate,memberId,title,body,extra__writeName);
         articles.add(article);
       }
 

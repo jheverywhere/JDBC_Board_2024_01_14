@@ -25,9 +25,12 @@ public class ArticleRepository {
 
   public  List<Article> getForPrintArticles() {
     SecSql sql = new SecSql();
-    sql.append("SELECT *");
-    sql.append("FROM article");
+    sql.append("SELECT A.*, M.name AS extra__writeName");
+    sql.append("FROM article AS A");
+    sql.append("INNER JOIN `member` AS M");
+    sql.append("on A.memberId = M.id");
     sql.append("ORDER BY id DESC;");
+
     List<Map<String,Object>> selectRows = MysqlUtil.selectRows(sql);
     List<Article> articles = new ArrayList<>();
 
