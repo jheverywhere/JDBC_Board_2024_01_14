@@ -26,7 +26,6 @@ public class ArticleController {
       return;
     }
     int memberId = Container.session.loginedMemberId;
-   // String wrtierName = Container.session.loginedMember.getName();
 
     System.out.println("== 게시물 작성 ==");
     System.out.printf("제목 : ");
@@ -102,12 +101,18 @@ public class ArticleController {
       return;
     }
 
-    int articlesCount = articleService.getArticleCount(id);
+    Article article = articleService.getForPrintArticleById(id);
 
-    if (articlesCount == 0) {
+    if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
+
+    if(article.getMemberId() != Container.session.loginedMemberId){
+      System.out.println("수정 권한이 없습니다.");
+      return;
+    }
+
 
     System.out.printf("새 제목 : ");
     String title = Container.in.nextLine();
@@ -136,12 +141,18 @@ public class ArticleController {
     }
 
 
-    int articlesCount = articleService.getArticleCount(id);
+    Article article = articleService.getForPrintArticleById(id);
 
-    if (articlesCount == 0) {
+    if (article == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
+
+    if(article.getMemberId() != Container.session.loginedMemberId){
+      System.out.println("삭제 권한이 없습니다.");
+      return;
+    }
+
 
 
     articleService.delete(id);
