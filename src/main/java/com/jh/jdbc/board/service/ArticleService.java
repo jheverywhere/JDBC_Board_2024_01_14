@@ -4,15 +4,14 @@ import com.jh.jdbc.board.dto.Article;
 import com.jh.jdbc.board.repository.ArticleRepository;
 
 import java.util.List;
-import java.util.Map;
 
 public class ArticleService {
   private ArticleRepository articleRepository;
   public ArticleService(){
     articleRepository = new ArticleRepository();
   }
-  public int write(String title, String body) {
-    return articleRepository.wrtie(title,body);
+  public int write(int memberId, String title, String body) {
+    return articleRepository.wrtie(memberId,title,body);
   }
   public List<Article> getForPrintArticles(){
     return articleRepository.getForPrintArticles();

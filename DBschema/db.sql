@@ -24,6 +24,24 @@ loginPw CHAR(200) NOT NULL,
 #loginId 칼럼에 unique 제약조건  추가
 ALTER TABLE `member` MODIFY COLUMN loginId CHAR(200) NOT NULL UNIQUE;
 
+#임시회원
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'user1',
+loginPw = 'user1',
+`name` = '리정환';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'user2',
+loginPw = 'user2',
+`name` = '리정구';
+
+#게시물 테이블에 memberId 칼럼 추가
+ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL;
+
 #해당 로그인 아이디가 있으면 1(true)을 반환, 없으면 0(false)을 반환
 
 SELECT COUNT(*)>0
