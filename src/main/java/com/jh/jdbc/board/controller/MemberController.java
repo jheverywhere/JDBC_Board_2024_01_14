@@ -98,6 +98,12 @@ public class MemberController {
     String loginPw;
     Member member = null;
 
+    //중복 로그인 금지 기능
+    if(Container.session.loginedMember != null){
+      System.out.println("이미 로그인이 되어있는 상태입니다.");
+      return;
+    }
+
     System.out.println("== 로그인 ==");
     int loginIdTryMaxCount = 3;
     int loginIdTryCount = 0;
