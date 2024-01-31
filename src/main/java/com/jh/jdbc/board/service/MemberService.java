@@ -29,5 +29,10 @@ public class MemberService {
   public void changeLoginPw(String loginId,String loginPw) {
     memberRepository.change1LoginPw(loginId,loginPw);
   }
+
+  public boolean checkLoginIdAndEmailMatch(String loginId, String email) {
+
+    return memberRepository.checkLoginIdAndEmailMatch(loginId,email);
+  }
 }
 

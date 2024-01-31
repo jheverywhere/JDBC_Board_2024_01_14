@@ -189,6 +189,7 @@ public class MemberController {
       return;
     }
     Member member = memberService.getMemberByLoginId(loginId);
+
     if (member == null) {
       System.out.println("존재하지 않은 아이디입니다.");
       return;
@@ -207,6 +208,13 @@ public class MemberController {
       System.out.println("해당 이메일은 존재하지 않습니다.");
       return;
     }
+    boolean isMatch = memberService.checkLoginIdAndEmailMatch(loginId,email);
+
+    if(isMatch == false){
+      System.out.println("입력한 로그인 아이디와 이메일이 일치하지 않습니다.");
+      return;
+    }
+
     System.out.printf("새 비밀번호 입력 : ");
     String newLoginPw = Container.in.nextLine().trim();
 
