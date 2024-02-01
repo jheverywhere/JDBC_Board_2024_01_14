@@ -4,12 +4,8 @@ import com.jh.jdbc.board.Rq;
 import com.jh.jdbc.board.container.Container;
 import com.jh.jdbc.board.dto.Article;
 import com.jh.jdbc.board.service.ArticleService;
-import com.jh.jdbc.board.util.MysqlUtil;
-import com.jh.jdbc.board.util.SecSql;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ArticleController {
 
@@ -42,10 +38,18 @@ public class ArticleController {
 
   }
 
-  public void list() {
-    System.out.println("== 게시물 리스트 ==");
+  public void list(Rq rq) {
+    int page = rq.getIntParam("page",1);
+    String searchKeyword = rq.getParam("searchKeyword","");
 
-    List<Article> articles = articleService.getForPrintArticles();
+    System.out.println("== 게시물 리스트 ==");
+    // 한 페이지에 보여줄 게시물 개수
+    int pageItemCount = 10;
+
+
+
+
+    List<Article> articles = articleService.getForPrintArticles(page,pageItemCount,searchKeyword);
 
 
     if (articles.isEmpty()) {
@@ -53,9 +57,9 @@ public class ArticleController {
       return;
     }
 
-    System.out.println("번호 / 작성날짜 / 제목 / 작성");
+    System.out.println("번호 / 작성날짜 / 제목 / 작성 / 조회수 ");
     for (Article article : articles) {
-      System.out.printf("%d / %s / %s / %s\n",article.getId(),article.getRegDate(),article.getTitle(),article.getExtra__writeName());
+      System.out.printf("%d / %s / %s / %s / %d\n",article.getId(),article.getRegDate(),article.getTitle(),article.getExtra__writeName(),article.getHit());
     }
   }
 
